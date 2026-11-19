@@ -13,7 +13,6 @@ public class LogAnalyzer {
     public static void main(String[] args)
             throws IOException, InterruptedException {
 
-        // Recuperer les fichiers logs
         Path directory = Path.of("C:\\Users\\user\\IdeaProjects\\Logsthreads\\src\\logs");
 
         List<Path> files;
@@ -24,7 +23,6 @@ public class LogAnalyzer {
                     .collect(Collectors.toList());
         }
 
-        // Niveau 1 : Threads simples
         System.out.println("Traitement avec Threads simples...");
 
         List<LogEntry> entries1 = processWithThreads(files);
@@ -33,7 +31,6 @@ public class LogAnalyzer {
 
         System.out.println("\n================================");
 
-        // Niveau 2 : ExecutorService
         System.out.println("Traitement avec ExecutorService...");
 
         List<LogEntry> entries2 = processWithExecutor(files);
@@ -41,7 +38,6 @@ public class LogAnalyzer {
         displayStatistics(entries2);
     }
 
-    // Methode 1 : Threads simples
     public static List<LogEntry> processWithThreads(List<Path> files)
             throws InterruptedException {
 
@@ -62,7 +58,6 @@ public class LogAnalyzer {
             threads.add(t);
         }
 
-        // Attendre la fin de tous les threads
         for (Thread thread : threads) {
             thread.join();
         }
@@ -70,7 +65,6 @@ public class LogAnalyzer {
         return allEntries;
     }
 
-    // Methode 2 : ExecutorService
     public static List<LogEntry> processWithExecutor(List<Path> files)
             throws InterruptedException {
 
@@ -95,16 +89,12 @@ public class LogAnalyzer {
 
         return allEntries;
     }
-
-    // Methode pour afficher les statistiques
     public static void displayStatistics(List<LogEntry> entries) {
 
-        // Nombre total de logs
         System.out.println(
                 "Nombre total d'entrees : " + entries.size()
         );
 
-        // Logs par niveau
         Map<String, Long> logsByLevel = entries.stream()
                 .collect(Collectors.groupingBy(
                         LogEntry::getLevel,
@@ -117,7 +107,6 @@ public class LogAnalyzer {
                 )
         );
 
-        // Logger le plus actif
         entries.stream()
                 .collect(Collectors.groupingBy(
                         LogEntry::getLogger,
@@ -136,7 +125,6 @@ public class LogAnalyzer {
                         )
                 );
 
-        // Nombre de logs ERROR
         long errorCount = entries.stream()
                 .filter(e -> e.getLevel().equals("ERROR"))
                 .count();
